@@ -1,0 +1,48 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=3270
+
+DESCRIPTION
+This plugin offers enhanced versions of the :[range]normal[!] and :[range]call
+commands which allow for additions and deletions of lines during iteration,
+and adapt the initially supplied [range] accordingly. 
+
+The built-in :normal[!] and :call commands can take a [range], and are then
+executed for each line in the range. If the supplied command / function
+modifies the number of lines in the buffer, the iteration continues over the
+initially supplied range of line numbers, totally oblivious to the changes.
+Thus, if you want to apply modifications that add or delete lines before or
+inside the [range], this built-in Vim functionality isn't much of a help. (You
+can work around this by recording a macro and then manually repeating it over
+each line, until you reach the end of the range, but you need to do the
+checking.)  
+
+RELATED WORKS
+- RangeMacro.vim (vimscript #3271) executes macros repeatedly until the end of
+  a range is reached, also taking addition / removal of lines into account.
+
+USAGE
+The plugin provides enhanced versions of the :call, :normal and :execute
+Vim commands: 
+
+:[range]CallWithMutableRange {name}([arguments])
+			Call a function (that does not need to accept a range)
+			once for every line in [range]. 
+
+:[range]NormalWithMutableRange[!] {commands}
+			Execute Normal mode commands {commands} for each line
+			in the [range]. 
+
+:[range]ExecuteWithMutableRange {expr1} ...
+			Execute the string that results from the evaluation of
+			{expr1} as an Ex command, once for every line in
+			[range]. {expr1} is re-evaluated on each line. 
+			Normally, (custom) commands that can operate over
+			multiple lines should take an optional [range], but
+			sometimes this wasn't implemented, and the command
+			only operates on the current position. In these cases,
+			(in addition to ad-hoc expressions) this command is
+			useful, and also handles (most) deletions and
+			insertions gracefully. 
+
+For each iteration, the cursor is positioned in the first column of that line.
+Folding is temporarily disabled. The cursor is left at the last line (possibly
+moved by the last invocation). The arguments are re-evaluated for each line. 
